@@ -92,7 +92,7 @@ export const InputField: FC<FormEntryField & TextStyles> = ({
       const isOk = re.test(string)
       handleErrorState(includeError, isOk, 'Invalid e-mail address')
     } else if (type == 'text') {
-      const isOk = string.trim().length > 0
+      const isOk = string.trim().length > 0 // include isRequired check
       handleErrorState(includeError, isOk, FAIL_SILENTLY)
     } else if (type == 'handle') {
       // Validate that only allowed characters are used similar to instagram handles
@@ -166,7 +166,7 @@ export const InputField: FC<FormEntryField & TextStyles> = ({
             paddingHorizontal: HORIZONTAL_PADDING_DEFAULT,
             marginTop: VERTICAL_PADDING_DEFAULT,
           },
-          { borderColor: isFocused ? primaryColor : secondaryColor },
+          { borderColor: isFocused ? ( errorMessage && errorMessage != FAIL_SILENTLY ? primaryColor : 'red' ) : secondaryColor },
           textStyle,
         ]}
         keyboardType={getKeyboardType(type)}
@@ -183,11 +183,11 @@ export const InputField: FC<FormEntryField & TextStyles> = ({
           if (onSaveData) {
             onSaveData({ text: string })
           }
-          if (!getErrorMessage) {
-            if (isRequired) {
-              validateTextBasedOnInput(string, false)
-            }
-          }
+          // if (!getErrorMessage) {
+            // if (isRequired) {
+              validateTextBasedOnInput(string, true)
+            // }
+          // }
         }}
       />
       {errorMessage && errorMessage != FAIL_SILENTLY ? (

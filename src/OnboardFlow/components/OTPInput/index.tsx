@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View, ViewStyle } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View, ViewStyle, Platform } from 'react-native';
 import { TextStyles } from '../../types';
 
 interface OTPInputProps {
@@ -21,7 +21,7 @@ export const OTPInput: FC<OTPInputProps & TextStyles> = ({
   const boxArray = new Array(maximumLength).fill(0);
   const inputRef = useRef<any>();
 
-  const [isInputBoxFocused, setIsInputBoxFocused] = useState(false);
+  const [isInputBoxFocused, setIsInputBoxFocused] = Platform.OS === 'ios' ? useState(false) : useState(true);
 
   const handleOnPress = () => {
     setIsInputBoxFocused(true);
@@ -67,6 +67,7 @@ export const OTPInput: FC<OTPInputProps & TextStyles> = ({
       </Pressable>
       <TextInput
         style={styles.textInputHidden}
+        autoFocus={Platform.OS === 'ios' ? false : true}
         value={code}
         onChangeText={setCode}
         keyboardType={'number-pad'}

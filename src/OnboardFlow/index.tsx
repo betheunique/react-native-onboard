@@ -11,6 +11,8 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
+  Keyboard,
+  Animated,
 } from 'react-native'
 import { Page, PageProps } from './Page'
 import { SwiperFlatList } from './Swiper'
@@ -20,8 +22,8 @@ import {
   COLOR_SECONDARY_DEFAULT,
   DEFAULT_FORM_ENTRY_TYPES,
   DEFAULT_PAGE_TYPES,
-  HORIZONTAL_PADDING_DEFAULT,
   VERTICAL_PADDING_DEFAULT,
+  HORIZONTAL_PADDING_DEFAULT,
 } from './constants'
 import { PrimaryButton, PrimaryButtonProps } from './components/PrimaryButton'
 import { Footer } from './Footer'
@@ -108,6 +110,7 @@ export const OnboardFlow: FC<OnboardFlowProps & TextStyles> = ({
   const bottomSheetRef = useRef<BottomSheetRef>(null)
   const currentPageValue = currentPage ?? currentPageInternal
   const setCurrentPageValue = setCurrentPage ?? setCurrentPageInternal
+  const [pageProgress, setPageProgress] = useState<Animated.Value>(new Animated.Value(0))
 
   const showHeader = pages[currentPageValue].showHeader !== false
   const showFooter = pages[currentPageValue].showFooter !== false
@@ -150,6 +153,7 @@ export const OnboardFlow: FC<OnboardFlowProps & TextStyles> = ({
   }
 
   function goToNextPage() {
+    Keyboard.dismiss();
     if (currentPageValue >= pages?.length - 1) {
       handleDone()
       return
@@ -157,6 +161,14 @@ export const OnboardFlow: FC<OnboardFlowProps & TextStyles> = ({
     const nextIndex = swiperRef.current?.getCurrentIndex() + 1
     setCurrentPageValue(nextIndex)
     swiperRef.current?.scrollToIndex({ index: nextIndex })
+
+    Animated.parallel([
+      Animated.timing(pageProgress, {
+        toValue: currentPageValue + 1,
+        duration: 200,
+        useNativeDriver: false,
+      }),
+    ]).start();
   }
 
   function goToPreviousPage() {
@@ -164,6 +176,15 @@ export const OnboardFlow: FC<OnboardFlowProps & TextStyles> = ({
     if (nextIndex < 0) {
       return
     }
+
+    Animated.parallel([
+      Animated.timing(pageProgress, {
+        toValue: currentPageValue - 1,
+        duration: 200,
+        useNativeDriver: false,
+      }),
+    ]).start();
+
     setCurrentPageValue(nextIndex)
     swiperRef.current?.scrollToIndex({ index: nextIndex })
   }
@@ -194,17 +215,16 @@ export const OnboardFlow: FC<OnboardFlowProps & TextStyles> = ({
         {showDismissButton ? <DismissButton /> : null}
         {showHeader && HeaderComponent ? (
           <HeaderComponent
-            paginationSelectedColor={paginationSelectedColor}
-            paginationColor={paginationColor}
             goToPreviousPage={goToPreviousPage}
             pages={pages}
-            style={[styles.footer, !showFooter ? { opacity: 0.0 } : null]}
+            style={styles.header}
             Components={components}
+            primaryColor={primaryColor}
+            secondaryColor={secondaryColor}
             currentPage={currentPageValue}
-            goToNextPage={goToNextPage}
-            canContinue={canContinueValue}
-            setCanContinue={setCanContinueValue}
             showFooter={showFooter}
+            pageProgress={pageProgress}
+            onClose={handleDone}
           />
         ) : null}
         <View style={styles.content}>

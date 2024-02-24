@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { KeyboardAvoidingView, StyleProp, StyleSheet, ViewStyle, TextStyle } from 'react-native'
+import { KeyboardAvoidingView, StyleProp, StyleSheet, ViewStyle, TextStyle, Platform } from 'react-native'
 import { OnboardComponents } from '../index'
 import { PRIMARY_BUTTON_TEXT_DEFAULT, PRIMARY_BUTTON_TEXT_LAST_PAGE_DEFAULT } from '../constants'
 import { PageData } from '../types'
@@ -49,13 +49,13 @@ export const Footer: FC<FooterProps> = ({
   const totalPages = pages?.length ?? 0
 
   return (
-    <KeyboardAvoidingView behavior="position" style={[style]} {...props}>
-      <Components.PaginationComponent
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? "position" : "height"}  style={[style]} {...props}>
+      {Components.PaginationComponent ? (<Components.PaginationComponent
         paginationColor={paginationColor}
         paginationSelectedColor={paginationSelectedColor}
         currentPage={currentPage}
         totalPages={totalPages}
-      />
+      />) : null}
       <Components.PrimaryButtonComponent
         text={getPrimaryButtonTitle()}
         currentPage={currentPage}

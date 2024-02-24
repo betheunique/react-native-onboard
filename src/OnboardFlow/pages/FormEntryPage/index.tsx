@@ -63,7 +63,7 @@ export const FormEntryPage: FC<OnboardPageConfigParams<FormEntryPageProps>> = ({
           titleStyle={titleStyle}
           subtitleStyle={subtitleStyle}
         />
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps='always' keyboardDismissMode='interactive'>
           {props.fields.map((input, index) => {
             const [hasError, setHasError] = useState(false)
 
@@ -117,6 +117,7 @@ export const FormEntryPage: FC<OnboardPageConfigParams<FormEntryPageProps>> = ({
                     isRequired: input.isRequired,
                     prefill: input.prefill,
                     id: input.id,
+                    textStyle: textStyle,
                     primaryColor: primaryColor,
                     secondaryColor: secondaryColor,
                     canContinue: canContinue,

@@ -1,28 +1,31 @@
 import React, { FC } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { Animated, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import { OnboardComponents } from '../index'
 import { PageData } from '../types'
 
 export interface HeaderProps {
   style?: StyleProp<ViewStyle> | undefined
   Components: OnboardComponents
-  paginationSelectedColor?: string
-  paginationColor?: string
+  primaryColor?: string
+  secondaryColor?: string
   currentPage: number
-  goToNextPage: () => void
   goToPreviousPage: () => void
+  onClose: () => void
   pages?: PageData[]
+  showFooter?: boolean
+  showHeader?: boolean
+  pageProgress: Animated.Value
   props?: any
 }
 
 export const Header: FC<HeaderProps> = ({
   style,
   Components,
-  paginationSelectedColor,
-  paginationColor,
+  primaryColor,
+  secondaryColor,
   currentPage,
-  goToNextPage,
-  pages,
+  pages,  
+  pageProgress,
   ...props
 }) => {
   const totalPages = pages?.length ?? 0
@@ -30,8 +33,8 @@ export const Header: FC<HeaderProps> = ({
   return (
     <View style={[style]} {...props}>
       <Components.PaginationComponent
-        paginationColor={paginationColor}
-        paginationSelectedColor={paginationSelectedColor}
+        paginationColor={primaryColor}
+        paginationSelectedColor={secondaryColor}
         currentPage={currentPage}
         totalPages={totalPages}
       />

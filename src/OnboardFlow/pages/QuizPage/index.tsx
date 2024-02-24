@@ -15,22 +15,22 @@ import {
 import { OnboardPageConfigParams } from '../../index'
 import { TextStack } from '../../components/TextStack'
 
-export interface MultipleChoicePageProps {
-  fields: MultipleChoiceField[]
+export interface QuizPageProps {
+  fields: QuizField[]
   minChoices?: number
   maxChoices?: number
-  onOptionsUpdated?: (options: MultipleChoiceField[]) => void
+  onOptionsUpdated?: (options: QuizField[]) => void
 }
 
-export interface MultipleChoiceField {
+export interface QuizField {
   id?: string
   title?: string
   subtitle?: string
   onUpdated?: (selected: boolean) => void
 }
 
-const multipleChoiceElement = 'multipleChoiceElement'
-export const MultipleChoicePage: FC<OnboardPageConfigParams<MultipleChoicePageProps>> = ({
+const quizElement = 'quizElement'
+export const QuizPage: FC<OnboardPageConfigParams<QuizPageProps>> = ({
   style,
   titleStyle,
   subtitleStyle,
@@ -51,7 +51,7 @@ export const MultipleChoicePage: FC<OnboardPageConfigParams<MultipleChoicePagePr
   canContinue,
   setCanContinue,
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState<MultipleChoiceField[]>([])
+  const [selectedOptions, setSelectedOptions] = useState<QuizField[]>([])
   const maxChoices = props.maxChoices ?? 1
   const minChoices = props.minChoices ?? 1
 
@@ -78,13 +78,12 @@ export const MultipleChoicePage: FC<OnboardPageConfigParams<MultipleChoicePagePr
     updateCanContinue()
   }, [currentPage])
 
-  const Field: FC<MultipleChoiceField> = ({ id, title, subtitle, onUpdated }) => {
+  const Field: FC<QuizField> = ({ id, title, subtitle, onUpdated }) => {
     // Create touchable opacity for each field and use field style
     const selected = selectedOptions.find(
       (option) => option.id === id && option.title === title && option.subtitle === subtitle
     )
 
-    //✓
     return (
       <TouchableOpacity
         onPress={() => {
@@ -103,7 +102,6 @@ export const MultipleChoicePage: FC<OnboardPageConfigParams<MultipleChoicePagePr
           }
         }}
       >
-        <View style={{ flexDirection: 'row'}}>
         <View
           style={[
             styles.option,
@@ -116,19 +114,6 @@ export const MultipleChoicePage: FC<OnboardPageConfigParams<MultipleChoicePagePr
           ]}
         >
           <Text style={[styles.optionTitle, textStyle]}>{title}</Text>
-        </View>
-        <View
-          style={[
-            styles.circleIcon,
-            selected ? { backgroundColor: primaryColor } : { backgroundColor: secondaryColor },
-          ]}
-        >
-          { selected ? <Text
-            style={styles.tickIcon}
-          >
-            {"\u2713"}
-          </Text> : null }
-        </View>
         </View>
       </TouchableOpacity>
     )
@@ -161,8 +146,8 @@ export const MultipleChoicePage: FC<OnboardPageConfigParams<MultipleChoicePagePr
         >
           {props.fields.map((input, index) => (
             <View key={index}>
-              {formElementTypes[multipleChoiceElement] ? (
-                formElementTypes[multipleChoiceElement]({
+              {formElementTypes[quizElement] ? (
+                formElementTypes[quizElement]({
                   onSaveData: onSaveData,
                   label: input.title,
                   placeHolder: '',
@@ -230,19 +215,4 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
   },
-  circleIcon: {
-    position: "absolute",
-    top: 32,
-    right: 10,
-    width: 25,
-    height: 25,
-    borderRadius: 12.5,
-  },
-  tickIcon: {
-    color: "white",
-    paddingHorizontal: 4,
-    paddingVertical: 2,
-    fontSize: 18,
-    fontWeight: "500",
-  }
 })

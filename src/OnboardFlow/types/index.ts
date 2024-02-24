@@ -4,6 +4,7 @@ import { FormElementTypesConfig, OnboardPageTypesConfig, PageType } from '../ind
 import { FooterProps } from '../Footer'
 import { PrimaryButtonProps } from '../components/PrimaryButton'
 import { SecondaryButtonProps } from '../components/SecondaryButton'
+import { HeaderProps } from '../Header'
 
 /* A FlowItem represents a single element in multiple types of Flows
   Generally, there is a title, subtitle, and image that the component will
@@ -70,7 +71,7 @@ export interface OnboardFlowProps {
   style?: StyleProp<ViewStyle> | undefined
   type?: 'inline' | 'fullscreen' | 'bottom-sheet'
   customVariables?: object
-  HeaderComponent?: FC<FooterProps>
+  HeaderComponent?: FC<HeaderProps>
   FooterComponent?: FC<FooterProps>
   PaginationComponent?: FC<PaginationProps>
   PrimaryButtonComponent?: FC<PrimaryButtonProps>
